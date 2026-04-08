@@ -37,7 +37,7 @@ dev = [
 ]
 
 [project.scripts]
-triageflow-server = "server.app:main"
+server = "server.app:main"
 
 [tool.setuptools.packages.find]
 include = ["server*", "tasks*", "data*", "tests*"]
