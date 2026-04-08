@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "triageflow"
+version = "1.0.0"
+description = "OpenEnv-compliant benchmark environment for AI-powered support ticket triage"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "TriageFlow Team"}
+]
+keywords = ["openenv", "benchmark", "triage", "support", "ai-agent"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "fastapi==0.111.0",
+    "uvicorn==0.30.1",
+    "pydantic==2.7.4",
+    "openai==1.35.3",
+    "pyyaml==6.0.1",
+    "httpx==0.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.2.2",
+]
+
+[tool.setuptools.packages.find]
+include = ["tasks*", "data*", "tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

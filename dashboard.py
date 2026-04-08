@@ -63,11 +63,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;filter:none!important}
 
 /* ───── FORMS ───── */
-.form-group{margin-bottom:10px}
-.form-label{display:block;font-size:10px;font-weight:600;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px}
-.form-select,.form-input{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text);font-family:'Inter',sans-serif;font-size:12px;outline:none;transition:all .2s}
-.form-select:focus,.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-dim)}
-.form-select option{background:var(--bg);color:var(--text)}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:9px;font-weight:700;color:var(--accent);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px}
+.form-select,.form-input{width:100%;padding:10px 14px;background:rgba(6,8,15,.8);border:1px solid rgba(139,92,246,.12);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;outline:none;transition:all .25s cubic-bezier(.4,0,.2,1);-webkit-appearance:none;appearance:none}
+.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a78bfa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.form-select:hover,.form-input:hover{border-color:rgba(139,92,246,.3);background:rgba(11,13,26,.9)}
+.form-select:focus,.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.12),0 0 20px rgba(139,92,246,.06);background:rgba(11,13,26,.95)}
+.form-select option{background:#0f1225;color:var(--text);padding:8px;font-weight:500}
+.form-input::placeholder{color:var(--text3);font-weight:400}
 
 /* ═══════ HEADER ═══════ */
 .header{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;background:rgba(6,8,15,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
@@ -217,13 +220,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div id="taskList"></div>
 
     <div class="section-title"><span class="material-symbols-outlined">gamepad</span>Manual Action</div>
-    <div class="form-group"><label class="form-label">Action Type</label><select class="form-select" id="fAction"><option value="classify">classify</option><option value="route">route</option><option value="request_info">request_info</option><option value="escalate">escalate</option><option value="resolve">resolve</option><option value="skip">skip</option></select></div>
-    <div class="form-group"><label class="form-label">Urgency</label><select class="form-select" id="fUrgency"><option value="none">none</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option><option value="critical">critical</option></select></div>
-    <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="fCategory"><option value="none">none</option><option value="billing">billing</option><option value="technical">technical</option><option value="account">account</option><option value="policy">policy</option><option value="other">other</option></select></div>
-    <div class="form-group"><label class="form-label">Assigned Team</label><select class="form-select" id="fTeam"><option value="none">none</option><option value="tier1">tier1</option><option value="tier2">tier2</option><option value="billing">billing</option><option value="security">security</option><option value="management">management</option></select></div>
+    <div class="form-group"><label class="form-label">Action Type</label><select class="form-select" id="fAction"><option value="classify">🏷️ Classify</option><option value="route">🔀 Route</option><option value="request_info">❓ Request Info</option><option value="escalate">⬆️ Escalate</option><option value="resolve">✅ Resolve</option><option value="skip">⏭️ Skip</option></select></div>
+    <div class="form-group"><label class="form-label">Urgency</label><select class="form-select" id="fUrgency"><option value="none">— Select —</option><option value="low">🟢 Low</option><option value="medium">🟡 Medium</option><option value="high">🟠 High</option><option value="critical">🔴 Critical</option></select></div>
+    <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="fCategory"><option value="none">— Select —</option><option value="billing">💳 Billing</option><option value="technical">🔧 Technical</option><option value="account">👤 Account</option><option value="policy">📋 Policy</option><option value="other">📦 Other</option></select></div>
+    <div class="form-group"><label class="form-label">Assigned Team</label><select class="form-select" id="fTeam"><option value="none">— Select —</option><option value="tier1">Tier 1 — General</option><option value="tier2">Tier 2 — Specialist</option><option value="billing">Billing Team</option><option value="security">Security Team</option><option value="management">Management</option></select></div>
     <div class="form-group"><label class="form-label">Missing Fields</label><input class="form-input" id="fMissing" placeholder="e.g. order_id, account_number"></div>
-    <div class="form-group"><label class="form-label">Resolution Note</label><input class="form-input" id="fNote" placeholder="Describe resolution (>20 chars)..."></div>
-    <div class="form-group"><label class="form-label">Escalation Reason</label><input class="form-input" id="fEscalation" placeholder="Why escalate?"></div>
+    <div class="form-group"><label class="form-label">Resolution Note</label><input class="form-input" id="fNote" placeholder="Describe the resolution (min. 20 chars)"></div>
+    <div class="form-group"><label class="form-label">Escalation Reason</label><input class="form-input" id="fEscalation" placeholder="Reason for escalation..."></div>
     <button class="btn btn-accent" style="width:100%;margin-top:8px" id="btnSubmit" disabled>
       <span class="material-symbols-outlined" style="font-size:16px">send</span> Submit Action
     </button>
