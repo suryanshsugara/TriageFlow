@@ -1,0 +1,38 @@
+# Environments
+venv/
+env/
+.env
+.venv
+ENV/
+env.bak/
+venv.bak/
+
+# Environment files
+.env
+.env.local
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# HuggingFace / Models
+*.safetensors
+*.ckpt
+*.pt
+*.bin
+
+# Log files
+*.log
+
+# Frontend (if mixed)
+node_modules/
+dist/
+.DS_Store
+
+static/*.png

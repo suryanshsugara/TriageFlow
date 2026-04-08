@@ -1,0 +1,868 @@
+[
+  {
+    "template_id": "BIL-001",
+    "subject": "Invoice Discrepancy for Q3 2025",
+    "body": "Hi Support, I received my Q3 invoice showing $450.00 but my Enterprise plan should be $380.00 per quarter. My account number is ACC-78234. Please review and issue a correction. Regards, Sarah Mitchell",
+    "sender": "sarah.mitchell@example.com",
+    "attachments": ["invoice_q3.pdf"],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-002",
+    "subject": "Overcharged on Monthly Subscription",
+    "body": "I was charged $99.99 instead of $49.99 for my Pro subscription this month. This happened after your system migrated last week. Account ACC-91045. I need this resolved within 48 hours as it affects my budget.",
+    "sender": "james.wilson@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-003",
+    "subject": "Requesting Refund for Unused Service",
+    "body": "Hello, I signed up for the annual plan but only used it for two months before switching to a competitor. I would like a prorated refund for the remaining 10 months. Please let me know the process.",
+    "sender": "maria.garcia@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": ["account_number"],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-004",
+    "subject": "Update Payment Method on File",
+    "body": "Hi, I need to update my credit card on file. My old card expired and I want to add my new Visa ending in 4821. My account is ACC-33421. Please confirm once updated.",
+    "sender": "robert.chen@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-005",
+    "subject": "Double Charged for Same Invoice",
+    "body": "I was charged twice for invoice INV-2025-0892. Both charges of $299.00 posted to my card on June 10th. Account ACC-44190. Please refund the duplicate charge immediately.",
+    "sender": "david.kim@example.com",
+    "attachments": ["bank_statement.pdf"],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-006",
+    "subject": "Disputing Late Payment Fee",
+    "body": "I received a $75 late fee on my last statement but I set up autopay three months ago. The payment should have been processed automatically. This is unacceptable and I want the fee reversed.",
+    "sender": "emily.torres@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": ["account_number"],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-007",
+    "subject": "Change Billing Cycle to Quarterly",
+    "body": "Hi, I would like to switch my billing cycle from monthly to quarterly for account ACC-55512. I understand there may be a prorated charge for the transition period. Please proceed.",
+    "sender": "alex.johnson@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-008",
+    "subject": "Enterprise License Pricing Error",
+    "body": "Our enterprise agreement states $15,000/year for 50 seats but we are being billed $18,500. Account ACC-10001. This is a contract violation and needs immediate attention from your billing leadership.",
+    "sender": "cfo@acmecorp.com",
+    "attachments": ["enterprise_agreement.pdf"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-009",
+    "subject": "Unauthorized Charge on Company Card",
+    "body": "We noticed an unauthorized charge of $2,499 on our company credit card linked to account ACC-67890. We did not authorize any upgrades or add-ons. This may be fraud. Please investigate urgently.",
+    "sender": "finance@globaltech.io",
+    "attachments": ["charge_screenshot.png"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "BIL-010",
+    "subject": "URGENT: $12,000 Refund Pending After Cancellation",
+    "body": "We cancelled our enterprise subscription 30 days ago and were promised a full refund of $12,000 within 14 business days. Account ACC-99001. The refund has not appeared and our CFO is escalating to legal if not resolved today.",
+    "sender": "vp.ops@megacorp.com",
+    "attachments": ["cancellation_confirmation.pdf"],
+    "ground_truth": {
+      "urgency": "critical",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": true
+    }
+  },
+  {
+    "template_id": "TEC-001",
+    "subject": "Cannot Log Into Dashboard",
+    "body": "When I try to log in, I get error ERR-4021 'Authentication service unavailable'. I have tried clearing cookies and using incognito mode. This started about two hours ago.",
+    "sender": "tom.baker@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-002",
+    "subject": "CloudSync Pro Crashes on Startup",
+    "body": "CloudSync Pro version 4.2.1 crashes immediately after launch on Windows 11. I get a white screen for about 3 seconds then it closes. I have reinstalled twice with no improvement.",
+    "sender": "nina.patel@example.com",
+    "attachments": ["crash_log.txt"],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-003",
+    "subject": "Everything Is Running Extremely Slow",
+    "body": "For the past week everything has been incredibly slow. Pages take 30+ seconds to load and sometimes time out completely. I also cannot access the billing page at all, it just shows a blank screen. Multiple team members are affected.",
+    "sender": "ops.team@startup.io",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": ["error_code", "product_name"],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-004",
+    "subject": "Reports Module Returns Error 503",
+    "body": "The reports module is returning HTTP error 503 when I try to generate monthly analytics. Error code: RPT-503-TIMEOUT. This has been happening since the maintenance window last night.",
+    "sender": "priya.sharma@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-005",
+    "subject": "API Integration Failing with CONN-TIMEOUT",
+    "body": "Our production API integration is failing with error CONN-TIMEOUT on all POST requests to your /v2/data endpoint. This is blocking our release pipeline and affecting customers. We need an immediate fix or workaround.",
+    "sender": "devops@partnerco.com",
+    "attachments": ["api_error_logs.txt"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "technical",
+      "required_team": "tier2",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-006",
+    "subject": "DataVault Export Feature Not Working",
+    "body": "The export to CSV feature in DataVault is producing empty files. I select the date range, choose CSV format, and click export but the downloaded file has only headers and no data rows.",
+    "sender": "analyst@datacorp.com",
+    "attachments": ["empty_export.csv"],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-007",
+    "subject": "Not Receiving Any Email Notifications",
+    "body": "I stopped receiving all email notifications about a week ago. I have checked my spam folder and notification settings. Everything looks enabled but nothing is coming through. Other team members seem fine.",
+    "sender": "lisa.wong@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": ["error_code", "product_name"],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-008",
+    "subject": "AnalyticsPro Dashboard Shows Blank Widgets",
+    "body": "All chart widgets on the AnalyticsPro main dashboard are showing blank white boxes since this morning. The sidebar navigation works fine but none of the visualizations render.",
+    "sender": "mark.thompson@example.com",
+    "attachments": ["blank_dashboard.png"],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-009",
+    "subject": "CRITICAL: Complete System Outage",
+    "body": "Our entire platform is down. All services returning error SYS-CRITICAL-001. Over 500 users are unable to access any functionality. This is a P0 incident. We need all hands on deck immediately.",
+    "sender": "sre@enterprise.com",
+    "attachments": ["status_page.png", "error_dump.log"],
+    "ground_truth": {
+      "urgency": "critical",
+      "category": "technical",
+      "required_team": "tier2",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": true
+    }
+  },
+  {
+    "template_id": "TEC-010",
+    "subject": "Database Sync Errors Across Regions",
+    "body": "We are seeing error DB-SYNC-ERR-2210 across our US-East and EU-West regions. Data written to primary is not replicating to read replicas. This is causing stale data to be served to European customers.",
+    "sender": "dba@cloudhost.net",
+    "attachments": ["sync_errors.log"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "technical",
+      "required_team": "tier2",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-011",
+    "subject": "TaskFlow Mobile App Keeps Crashing",
+    "body": "The TaskFlow mobile app on iOS 18 crashes every time I try to open the calendar view. It works fine on the web version. I am using TaskFlow version 3.8.2 on iPhone 16.",
+    "sender": "sam.rodriguez@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "TEC-012",
+    "subject": "File Upload Failing with Error",
+    "body": "Cannot upload files larger than 5MB. Error code UPLOAD-FAIL-007 appears with message 'Request entity too large'. Our plan supposedly supports up to 100MB uploads. Using Chrome 126.",
+    "sender": "jenny.foster@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-001",
+    "subject": "Need Help Resetting My Password",
+    "body": "Hi, I forgot my password and the reset email is not arriving. I have checked spam. My login email is tom.baker@example.com. Can you manually trigger a reset or provide alternative recovery options?",
+    "sender": "tom.baker@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-002",
+    "subject": "Account Locked After Failed Login Attempts",
+    "body": "My account got locked after I entered the wrong password several times. I know my correct password now but the system says my account is temporarily suspended. I need access for a client meeting in 2 hours.",
+    "sender": "kate.larson@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-003",
+    "subject": "Profile Changes Not Saving",
+    "body": "Every time I update my display name or timezone in account settings, the changes revert after I navigate away. I have tried multiple browsers. The save button shows a green checkmark but nothing persists.",
+    "sender": "ryan.clarke@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-004",
+    "subject": "Setting Up Two-Factor Authentication",
+    "body": "I want to enable 2FA on my account but I cannot find the option in security settings. We are required by our company policy to have 2FA enabled on all third-party tools by end of month.",
+    "sender": "carol.nguyen@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-005",
+    "subject": "Request to Merge Two Accounts",
+    "body": "I have two accounts — one with my personal email and one with my work email. I need to merge them so all my project data is in one place. Can you combine them under my work email?",
+    "sender": "greg.taylor@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-006",
+    "subject": "Change Team Member Permissions",
+    "body": "I need to downgrade three team members from Admin to Editor role. They were temporarily given admin access for a migration project that is now complete. Users: jdoe, asmith, blee.",
+    "sender": "admin@designstudio.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-007",
+    "subject": "Request for Complete Account Deletion",
+    "body": "Under GDPR Article 17, I request the complete deletion of my account and all associated personal data. I want confirmation that all data including backups has been permanently erased within 30 days.",
+    "sender": "hans.mueller@example.de",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-008",
+    "subject": "Add New Team Member to Organization",
+    "body": "We hired a new developer and need to add them to our organization. Their email is new.dev@ourcompany.com. They should have the Developer role with access to the staging environment only.",
+    "sender": "hr@ourcompany.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "ACC-009",
+    "subject": "URGENT: Account Compromised - Unauthorized Access",
+    "body": "We detected unauthorized login attempts and configuration changes on our admin account from an IP in a foreign country. API keys may have been exposed. We need immediate account lockdown and security audit.",
+    "sender": "security@financeapp.com",
+    "attachments": ["suspicious_activity.log"],
+    "ground_truth": {
+      "urgency": "critical",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": true
+    }
+  },
+  {
+    "template_id": "ACC-010",
+    "subject": "SSO Configuration Not Working with Okta",
+    "body": "We are trying to configure SAML SSO with Okta but getting a metadata parsing error. Our IT team has verified the Okta configuration is correct on their end. This is blocking our enterprise rollout to 200 users.",
+    "sender": "it.admin@largecorp.com",
+    "attachments": ["okta_config.xml"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "account",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-001",
+    "subject": "Question About Terms of Service Update",
+    "body": "I noticed your terms of service were updated last month. Can you summarize the key changes from the previous version? Specifically, I am concerned about the arbitration clause and data licensing sections.",
+    "sender": "legal@smallbiz.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-002",
+    "subject": "Data Retention Period Inquiry",
+    "body": "For compliance purposes, we need to know your exact data retention periods for user activity logs, file uploads, and deleted account data. Please provide documentation we can share with our auditors.",
+    "sender": "compliance@healthco.org",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-003",
+    "subject": "GDPR Subject Access Request",
+    "body": "Under GDPR Article 15, I am requesting a complete copy of all personal data you hold about me. This includes profile data, usage analytics, IP logs, and any data shared with third parties. Please respond within 30 days.",
+    "sender": "citizen@eu-privacy.org",
+    "attachments": ["id_verification.pdf"],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-004",
+    "subject": "SLA Violation - Response Time Not Met",
+    "body": "Our Premium SLA guarantees a 4-hour response time for critical issues. Ticket TK-28934 was filed 18 hours ago as critical and we still have not received any response. This is a clear SLA breach and we expect remediation.",
+    "sender": "service.manager@bigclient.com",
+    "attachments": ["sla_agreement.pdf"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-005",
+    "subject": "Privacy Policy Concern for Minor Users",
+    "body": "Our school is considering your product for students aged 13-17. We need to understand how you handle data for minor users under COPPA. Do you have specific privacy protections in place?",
+    "sender": "principal@highschool.edu",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-006",
+    "subject": "SOC 2 Compliance Audit Documentation Request",
+    "body": "Our organization requires SOC 2 Type II certification from all vendors. Can you provide your latest SOC 2 report and any bridge letters covering the current period? We need this for our annual vendor review.",
+    "sender": "audit@bankingsolutions.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-007",
+    "subject": "Appeal Content Moderation Decision",
+    "body": "Our marketing content was flagged and removed for violating community guidelines. We believe this was a false positive as the content is an educational infographic about cybersecurity. We request a manual review.",
+    "sender": "marketing@cybered.com",
+    "attachments": ["flagged_content.png"],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-008",
+    "subject": "Vendor Sharing Customer Data Without Authorization",
+    "body": "We discovered that one of your integration partners has been accessing and sharing our customer data without our explicit consent. This violates our DPA and potentially multiple privacy regulations. We need an immediate investigation.",
+    "sender": "dpo@retailchain.com",
+    "attachments": ["data_access_evidence.pdf"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": true,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "POL-009",
+    "subject": "CRITICAL: Potential Data Breach Notification",
+    "body": "We have evidence that customer PII may have been exposed through an unsecured API endpoint on your platform. Approximately 10,000 records may be affected. Under breach notification laws, we require immediate confirmation and an incident response plan within 24 hours.",
+    "sender": "ciso@enterprise-client.com",
+    "attachments": ["vulnerability_report.pdf", "affected_records_sample.csv"],
+    "ground_truth": {
+      "urgency": "critical",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": true,
+      "sla_critical": true
+    }
+  },
+  {
+    "template_id": "POL-010",
+    "subject": "New EU AI Act Compliance Requirements",
+    "body": "With the EU AI Act coming into effect, we need to understand how your platform's AI features will be classified and what documentation you will provide regarding AI model transparency and risk assessment.",
+    "sender": "regulatory@eucompany.de",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "policy",
+      "required_team": "management",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-001",
+    "subject": "General Product Information Request",
+    "body": "Hi, I am evaluating project management tools for our 25-person team. Could you send me an overview of your features, pricing tiers, and any case studies from similar-sized companies?",
+    "sender": "buyer@newclient.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-002",
+    "subject": "Feature Request: Dark Mode",
+    "body": "I love your product but working late at night the bright interface causes eye strain. Please consider adding a dark mode option. I know several other users who would appreciate this as well.",
+    "sender": "nightowl@dev.io",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-003",
+    "subject": "Partnership and Integration Inquiry",
+    "body": "We are a CRM platform serving 50,000+ customers and are interested in building a native integration with your product. Who should we speak with about partnership opportunities and API access?",
+    "sender": "bizdev@crmplatform.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-004",
+    "subject": "Training Session Request for New Team",
+    "body": "We just onboarded 15 new employees who will be using your platform daily. Can we schedule a training webinar next week? We are in EST timezone and would prefer a 2-hour session.",
+    "sender": "training@growthco.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-005",
+    "subject": "Documentation Has Outdated Screenshots",
+    "body": "Several pages in your help center have screenshots from the old UI version. The settings page, user management section, and API docs all show the pre-redesign interface. This is confusing for new users.",
+    "sender": "helpful.user@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "low",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-006",
+    "subject": "Following Up on Sales Demo from Last Week",
+    "body": "Hi, we had a product demo last Thursday with your sales team (ref: DEMO-2025-441). Our procurement team has some additional questions about volume discounts and deployment options before we can proceed.",
+    "sender": "purchasing@mediaco.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-007",
+    "subject": "Event Sponsorship Opportunity",
+    "body": "We are organizing TechSummit 2025 (5,000+ attendees) and would like to invite your company as a Gold sponsor. The event is in September in San Francisco. Sponsorship packages start at $10,000.",
+    "sender": "events@techsummit.org",
+    "attachments": ["sponsorship_deck.pdf"],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-008",
+    "subject": "Accessibility Issues and Billing Discrepancy",
+    "body": "Two separate issues: First, your platform fails WCAG 2.1 AA compliance — color contrast is insufficient and screen reader navigation is broken. Second, we were overcharged by $200 on our last invoice. Both need attention.",
+    "sender": "accessibility@nonprofit.org",
+    "attachments": ["wcag_audit.pdf"],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": ["split_required"],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-009",
+    "subject": "Emergency Contact Information Update Needed",
+    "body": "Our company's emergency contact changed and we need to update this across all accounts immediately. The old contact no longer works for our organization and critical alerts are going to the wrong person.",
+    "sender": "admin@construction.co",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "high",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": false
+    }
+  },
+  {
+    "template_id": "OTH-010",
+    "subject": "CRITICAL: Executive Escalation - Unresolved Issues",
+    "body": "This is our fifth attempt to get resolution on multiple open tickets (TK-301, TK-305, TK-312). Our CEO has directed me to escalate to your executive team. We are considering terminating our $500K annual contract if these are not resolved within 24 hours.",
+    "sender": "vp.technology@keyclient.com",
+    "attachments": ["open_tickets_summary.pdf"],
+    "ground_truth": {
+      "urgency": "critical",
+      "category": "other",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": false,
+      "has_policy_violation": false,
+      "sla_critical": true
+    }
+  },
+  {
+    "template_id": "DUP-001",
+    "subject": "RE: Double Charged for Same Invoice - Still Not Resolved",
+    "body": "Following up on my earlier email about being double charged for invoice INV-2025-0892. It has been 6 hours and I have not heard back. Both charges of $299.00 are still on my account ACC-44190. Please respond ASAP.",
+    "sender": "david.kim@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "billing",
+      "required_team": "billing",
+      "missing_fields": [],
+      "is_duplicate": true,
+      "has_policy_violation": false,
+      "sla_critical": false,
+      "duplicate_of": "BIL-005"
+    }
+  },
+  {
+    "template_id": "DUP-002",
+    "subject": "Reports Module Still Returning 503 Error",
+    "body": "Hi, I reported the reports module error earlier today but it is still happening. Error code RPT-503-TIMEOUT persists. Is there an ETA on a fix? This is blocking my end-of-month reporting.",
+    "sender": "priya.sharma@example.com",
+    "attachments": [],
+    "ground_truth": {
+      "urgency": "medium",
+      "category": "technical",
+      "required_team": "tier1",
+      "missing_fields": [],
+      "is_duplicate": true,
+      "has_policy_violation": false,
+      "sla_critical": false,
+      "duplicate_of": "TEC-004"
+    }
+  }
+]
