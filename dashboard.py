@@ -14,8 +14,8 @@ DASHBOARD_HTML = r"""<!DOCTYPE html>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#06080f;--bg-subtle:#0a0e1a;--surface:#111827;--surface2:#1e2740;--surface3:#283352;
-  --border:rgba(148,163,184,.12);--border-bright:rgba(148,163,184,.2);
-  --accent:#a3e635;--accent-glow:rgba(163,230,53,.15);--accent-dim:rgba(163,230,53,.08);
+  --border:rgba(139,92,246,.12);--border-bright:rgba(139,92,246,.2);
+  --accent:#a78bfa;--accent-glow:rgba(139,92,246,.2);--accent-dim:rgba(139,92,246,.08);
   --blue:#60a5fa;--violet:#a78bfa;--rose:#fb7185;--amber:#fbbf24;--cyan:#22d3ee;
   --text:#f1f5f9;--text2:#94a3b8;--text3:#475569;
   --radius:16px;--radius-sm:10px;--radius-xs:6px;
@@ -28,8 +28,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 /* ───── ANIMATIONS ───── */
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(163,230,53,.5)}100%{box-shadow:0 0 0 8px rgba(163,230,53,0)}}
-@keyframes glow-breathe{0%,100%{box-shadow:0 0 20px rgba(163,230,53,.08)}50%{box-shadow:0 0 40px rgba(163,230,53,.2),0 0 80px rgba(163,230,53,.05)}}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(139,92,246,.5)}100%{box-shadow:0 0 0 8px rgba(139,92,246,0)}}
+@keyframes glow-breathe{0%,100%{box-shadow:0 0 20px rgba(139,92,246,.08)}50%{box-shadow:0 0 40px rgba(139,92,246,.25),0 0 80px rgba(139,92,246,.08)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-6px)}}
 .fade-up{animation:fadeUp .25s ease}
@@ -73,7 +73,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .header{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;background:rgba(6,8,15,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
 .header-left{display:flex;align-items:center;gap:12px}
 .logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-.3px}
-.logo-icon{width:32px;height:32px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px var(--accent-glow);animation:glow-breathe 4s ease-in-out infinite}
+.logo-icon{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#c084fc);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(139,92,246,.3);animation:glow-breathe 4s ease-in-out infinite}
 .logo-icon .material-symbols-outlined{font-size:18px;color:var(--bg);font-variation-settings:'FILL' 1}
 .header-center{display:flex;gap:6px}
 .chip{display:flex;align-items:center;gap:5px;padding:5px 14px;background:var(--surface);border:1px solid var(--border);border-radius:100px;font-size:11px;color:var(--text2);font-weight:500}
@@ -113,7 +113,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .ticket-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);padding:3px 8px;background:var(--surface2);border-radius:var(--radius-xs)}
 .ticket-subject{font-size:20px;font-weight:800;color:#fff;margin-bottom:10px;line-height:1.3;letter-spacing:-.2px}
 .ticket-meta{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.avatar{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--blue));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--bg);flex-shrink:0}
+.avatar{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#8b5cf6,#c084fc);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
 .sender-info{display:flex;flex-direction:column;gap:1px}
 .sender-info .name{font-weight:600;font-size:13px}
 .sender-info .time{color:var(--text3);font-size:11px}
@@ -154,7 +154,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .sr-val{font-size:11px;font-weight:700;width:34px;text-align:right;font-family:'JetBrains Mono',monospace}
 
 /* ═══════ TERMINAL ═══════ */
-.terminal{background:#030712;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:10px;padding:12px;border-radius:var(--radius-sm);height:200px;overflow-y:auto;border:1px solid var(--border);line-height:1.6;position:relative}
+.terminal{background:#030712;color:#a78bfa;font-family:'JetBrains Mono',monospace;font-size:10px;padding:12px;border-radius:var(--radius-sm);height:200px;overflow-y:auto;border:1px solid var(--border);line-height:1.6;position:relative}
 .terminal::before{content:'CONSOLE';position:absolute;top:6px;right:8px;font-size:8px;color:var(--text3);letter-spacing:1px;opacity:.5}
 
 /* ═══════ SNACKBAR ═══════ */
@@ -277,8 +277,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <svg width="130" height="130" viewBox="0 0 130 130" id="gaugesvg">
         <defs>
           <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#a3e635"/>
-            <stop offset="100%" stop-color="#22d3ee"/>
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#c084fc"/>
           </linearGradient>
         </defs>
         <circle cx="65" cy="65" r="52" fill="none" stroke="var(--surface2)" stroke-width="6"/>

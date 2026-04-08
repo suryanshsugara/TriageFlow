@@ -896,39 +896,121 @@ img{max-width:100%;display:block}
 </div><!-- end login page -->
 
 
+<canvas id="particleCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
 <script>
-/* ═══════ STARS ═══════ */
-(function createStars() {
-  const layer = document.getElementById('starsLayer');
-  const count = 80;
-  for (let i = 0; i < count; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.style.left = Math.random() * 100 + '%';
-    star.style.top = Math.random() * 100 + '%';
-    star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
-    star.style.animationDelay = (Math.random() * 4) + 's';
-    star.style.width = (1 + Math.random() * 2) + 'px';
-    star.style.height = star.style.width;
-    layer.appendChild(star);
+/* ═══════ INTERACTIVE PARTICLE SYSTEM ═══════ */
+(function(){
+  const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
+  let W,H,mx=0,my=0,particles=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  window.addEventListener('resize',resize);resize();
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  class P{
+    constructor(){this.reset()}
+    reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.8+.3;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.o=Math.random()*.5+.1;this.life=Math.random()*200+100}
+    update(){
+      const dx=mx-this.x,dy=my-this.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<200){this.vx+=dx*.00003;this.vy+=dy*.00003;this.o=Math.min(.8,.1+(.2*(200-d)/200))}
+      this.x+=this.vx;this.y+=this.vy;this.life--;
+      if(this.x<0||this.x>W||this.y<0||this.y>H||this.life<=0)this.reset();
+    }
+    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(139,92,246,${this.o})`;ctx.fill()}
   }
+  for(let i=0;i<120;i++)particles.push(new P());
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{p.update();p.draw()});
+    // draw lines between nearby particles
+    for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=dx*dx+dy*dy;
+      if(d<12000){ctx.strokeStyle=`rgba(139,92,246,${.06*(1-d/12000)})`;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke()}
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
 })();
+
+/* ═══════ PARALLAX MOUSE on HERO ═══════ */
+(function(){
+  const cosmic=document.querySelector('.hero-cosmic');
+  const ring=document.querySelector('.hero-cosmic-ring');
+  document.addEventListener('mousemove',e=>{
+    const cx=window.innerWidth/2,cy=window.innerHeight/2;
+    const dx=(e.clientX-cx)/cx,dy=(e.clientY-cy)/cy;
+    if(cosmic)cosmic.style.transform=`translateX(calc(-50% + ${dx*30}px)) translateY(${dy*20}px)`;
+    if(ring)ring.style.transform=`translate(calc(-50% + ${dx*-15}px),calc(-50% + ${dy*-10}px))`;
+  });
+})();
+
+/* ═══════ STAGGERED SCROLL REVEAL ═══════ */
+const animateObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const delay = e.target.dataset.delay || 0;
+      setTimeout(() => e.target.classList.add('visible'), delay);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.animate-in').forEach((el, i) => {
+  el.dataset.delay = (i % 4) * 100;
+  animateObserver.observe(el);
+});
+
+/* ═══════ ANIMATED NUMBER COUNTERS ═══════ */
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting || e.target.dataset.counted) return;
+    e.target.dataset.counted = '1';
+    const text = e.target.textContent;
+    const isPercent = text.includes('%');
+    const target = parseInt(text);
+    let current = 0;
+    const step = Math.max(1, Math.floor(target / 40));
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      e.target.textContent = current + (isPercent ? '%' : '');
+    }, 30);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+/* ═══════ MAGNETIC BUTTON HOVER ═══════ */
+document.querySelectorAll('.btn-hero, .btn-cta, .btn-hero-outline').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = '';
+    btn.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1)';
+    setTimeout(() => btn.style.transition = '', 400);
+  });
+});
+
+/* ═══════ TILT EFFECT on PREVIEW FRAME ═══════ */
+const preview = document.querySelector('.preview-frame');
+if (preview) {
+  preview.addEventListener('mousemove', e => {
+    const rect = preview.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - .5;
+    const y = (e.clientY - rect.top) / rect.height - .5;
+    preview.style.transform = `perspective(1000px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`;
+  });
+  preview.addEventListener('mouseleave', () => {
+    preview.style.transform = '';
+    preview.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1)';
+    setTimeout(() => preview.style.transition = 'all .3s ease', 600);
+  });
+}
 
 /* ═══════ NAVBAR SCROLL ═══════ */
 window.addEventListener('scroll', () => {
   const nav = document.getElementById('navbar');
   if (nav) nav.classList.toggle('scrolled', window.scrollY > 40);
 });
-
-/* ═══════ ANIMATE ON SCROLL ═══════ */
-const animateObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.animate-in').forEach(el => animateObserver.observe(el));
 
 /* ═══════ PAGE SWITCHING ═══════ */
 function showPage(page) {
@@ -956,35 +1038,20 @@ function handleLogin(e) {
   btn.textContent = 'Signing in...';
   btn.style.opacity = '0.7';
   btn.disabled = true;
-  setTimeout(() => {
-    window.location.href = '/dashboard';
-  }, 800);
+  setTimeout(() => { window.location.href = '/dashboard'; }, 800);
 }
-
 function togglePassword() {
-  const pw = document.getElementById('loginPassword');
-  const icon = document.getElementById('pwIcon');
-  if (pw.type === 'password') {
-    pw.type = 'text';
-    icon.textContent = 'visibility_off';
-  } else {
-    pw.type = 'password';
-    icon.textContent = 'visibility';
-  }
+  const pw = document.getElementById('loginPassword'), icon = document.getElementById('pwIcon');
+  if (pw.type === 'password') { pw.type = 'text'; icon.textContent = 'visibility_off'; }
+  else { pw.type = 'password'; icon.textContent = 'visibility'; }
 }
+function handleSocialLogin(provider) { window.location.href = '/dashboard'; }
 
-function handleSocialLogin(provider) {
-  window.location.href = '/dashboard';
-}
-
-/* ═══════ SMOOTH SCROLL for anchors ═══════ */
+/* ═══════ SMOOTH SCROLL ═══════ */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', function(e) {
     const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   });
 });
 </script>
