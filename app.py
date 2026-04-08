@@ -1,9 +1,9 @@
 """TriageFlow FastAPI Application — HTTP layer for the OpenEnv environment."""
 
 import uuid
-from typing import Any
+from typing import Any, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -101,16 +101,19 @@ async def health() -> HealthResponse:
 
 
 @app.post("/reset")
-async def reset(request: ResetRequest) -> dict[str, Any]:
+async def reset(request: Optional[ResetRequest] = Body(None)) -> dict[str, Any]:
     """Reset the environment for a new episode.
 
     Args:
         request: Contains optional seed, task_name, and session_id.
+                 Can be omitted entirely (empty POST body).
 
     Returns:
         Observation JSON for the first ticket.
     """
     try:
+        if request is None:
+            request = ResetRequest()
         env = _get_env(request.session_id)
         obs = env.reset(seed=request.seed, task_name=request.task_name)
         return obs.model_dump()
