@@ -486,12 +486,18 @@ class TriageFlowEnv:
         )
 
     def _compute_episode_score(self) -> float:
-        """Compute normalized episode score from trajectory rewards."""
+        """Compute normalized episode score from trajectory rewards.
+
+        Returns a score strictly in the open interval (0, 1).
+        The OpenEnv validator rejects exactly 0.0 or 1.0.
+        """
+        EPS = 1e-6
         if not self._trajectory:
-            return 0.0
+            return EPS
         total_reward = sum(step["reward"]["total"] for step in self._trajectory)
         num_tickets = len(self._ticket_queue)
         if num_tickets == 0:
-            return 0.0
+            return EPS
         score = total_reward / num_tickets
-        return max(0.0, min(1.0, score))
+        # Clamp to open interval (0, 1) — strictly exclude boundaries
+        return max(EPS, min(1.0 - EPS, score))
