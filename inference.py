@@ -47,10 +47,13 @@ def log_step(step: int, action_type: str, reward: float, done: bool, error: str 
 
 def log_end(success: bool, steps: int, score: float, rewards: list[float]) -> None:
     """Emit [END] log line."""
+    EPS = 1e-4
+    # Ensure score is strictly in (0, 1) for the validator
+    score = max(EPS, min(1.0 - EPS, score))
     success_str = str(success).lower()
-    rewards_str = ",".join(f"{r:.2f}" for r in rewards)
+    rewards_str = ",".join(f"{r:.4f}" for r in rewards)
     print(
-        f"[END] success={success_str} steps={steps} score={score:.2f} rewards={rewards_str}",
+        f"[END] success={success_str} steps={steps} score={score:.4f} rewards={rewards_str}",
         flush=True,
     )
 
@@ -208,10 +211,13 @@ def run_task(env: TriageFlowEnv, client: OpenAI, task_name: str, seed: int) -> f
             log_step(step_num, "error", 0.0, True, error_msg)
             done = True
 
-    # Compute final score
-    final_score = info.get("final_score", 0.0) if not error_msg else 0.0
+    # Compute final score — must be strictly in (0, 1)
+    EPS = 1e-4
+    final_score = info.get("final_score", EPS) if not error_msg else EPS
     if not rewards_list:
-        final_score = 0.0
+        final_score = EPS
+    # Clamp to open interval (0, 1)
+    final_score = max(EPS, min(1.0 - EPS, final_score))
 
     success = final_score >= 0.5
     log_end(success, step_num, final_score, rewards_list)

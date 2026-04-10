@@ -491,7 +491,7 @@ class TriageFlowEnv:
         Returns a score strictly in the open interval (0, 1).
         The OpenEnv validator rejects exactly 0.0 or 1.0.
         """
-        EPS = 1e-6
+        EPS = 1e-4
         if not self._trajectory:
             return EPS
         total_reward = sum(step["reward"]["total"] for step in self._trajectory)
