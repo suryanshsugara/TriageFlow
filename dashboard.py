@@ -362,7 +362,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 <!-- ═══════ TICKET DIFFICULTY HEATMAP ═══════ -->
 <div class="full-section">
-  <div class="full-section-title">📊 Ticket Difficulty Heatmap</div>
+  <div class="full-section-title"><span class="material-symbols-outlined" style="font-size:20px;opacity:.6">grid_view</span> Agent Difficulty Matrix</div>
+  <p style="color:var(--text3);font-size:12px;margin:-8px 0 16px;max-width:600px">Estimated resolution difficulty per category–urgency combination. Hover for routing guidance.</p>
   <div class="heatmap-container" id="heatmapContainer"></div>
   <div class="heatmap-tooltip" id="heatmapTooltip"></div>
 </div>
@@ -703,66 +704,65 @@ function downloadLog() {
   a.click();
 }
 
-/* ═══════ TICKET DIFFICULTY HEATMAP ═══════ */
+/* ═══════ AGENT DIFFICULTY MATRIX ═══════ */
 function renderHeatmap() {
-  const categories = ['billing','technical','account','policy','other'];
-  const urgencies = ['critical','high','medium','low'];
+  const categories = ['Billing','Technical','Account','Policy','Other'];
+  const urgencies = ['Critical','High','Medium','Low'];
   const diffMap = {
-    'technical-critical':0.95,'policy-high':0.88,'billing-critical':0.82,
-    'technical-high':0.79,'policy-critical':0.85,'policy-medium':0.71,
-    'account-critical':0.72,'account-high':0.65,'account-medium':0.58,
-    'billing-high':0.68,'billing-medium':0.55,'technical-medium':0.60,
-    'technical-low':0.42,'billing-low':0.38,'account-low':0.31,
-    'policy-low':0.45,'other-critical':0.35,'other-high':0.28,
-    'other-medium':0.25,'other-low':0.20
+    'Technical-Critical':0.95,'Policy-High':0.88,'Billing-Critical':0.82,
+    'Technical-High':0.79,'Policy-Critical':0.85,'Policy-Medium':0.71,
+    'Account-Critical':0.72,'Account-High':0.65,'Account-Medium':0.58,
+    'Billing-High':0.68,'Billing-Medium':0.55,'Technical-Medium':0.60,
+    'Technical-Low':0.42,'Billing-Low':0.38,'Account-Low':0.31,
+    'Policy-Low':0.45,'Other-Critical':0.35,'Other-High':0.28,
+    'Other-Medium':0.25,'Other-Low':0.20
   };
-  const recs = d => d>=0.8?'Always escalate to tier2':d>=0.6?'Route carefully, check SLA':d>=0.4?'Standard routing applies':'Tier1 resolution likely sufficient';
-  const cellW=120,cellH=60,padL=90,padT=50,padB=60;
-  const w=padL+categories.length*cellW+20, h=padT+urgencies.length*cellH+padB;
+  const recs = d => d>=0.8 ? 'Recommend immediate escalation to Tier 2' : d>=0.6 ? 'Route with caution; verify SLA compliance' : d>=0.4 ? 'Standard routing procedures apply' : 'Tier 1 resolution generally sufficient';
+  const cellW=80, cellH=36, padL=70, padT=36, padB=44, gap=3;
+  const w = padL + categories.length*(cellW+gap) + 10;
+  const h = padT + urgencies.length*(cellH+gap) + padB;
 
-  function lerpColor(t){
-    const r1=59,g1=130,b1=246,r2=244,g2=63,b2=94;
-    const r=Math.round(r1+(r2-r1)*t),g=Math.round(g1+(g2-g1)*t),b=Math.round(b1+(b2-b1)*t);
-    return `rgb(${r},${g},${b})`;
-  }
-
-  let svg = `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="display:block">`;
+  let svg = `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="display:block;max-width:580px">`;
   // Column headers
   categories.forEach((c,i) => {
-    svg += `<text x="${padL+i*cellW+cellW/2}" y="${padT-12}" text-anchor="middle" fill="var(--text2)" font-size="11" font-weight="700" font-family="Inter" text-transform="uppercase">${c}</text>`;
+    svg += `<text x="${padL+i*(cellW+gap)+cellW/2}" y="${padT-10}" text-anchor="middle" fill="var(--text3)" font-size="10" font-weight="600" font-family="Inter" letter-spacing=".3">${c}</text>`;
   });
   // Row headers
   urgencies.forEach((u,j) => {
-    svg += `<text x="${padL-12}" y="${padT+j*cellH+cellH/2+4}" text-anchor="end" fill="var(--text2)" font-size="11" font-weight="600" font-family="Inter">${u}</text>`;
+    svg += `<text x="${padL-8}" y="${padT+j*(cellH+gap)+cellH/2+3}" text-anchor="end" fill="var(--text3)" font-size="10" font-weight="500" font-family="Inter">${u}</text>`;
   });
-  // Cells
+  // Cells — subtle opacity-based tint on a single hue
   urgencies.forEach((u,j) => {
     categories.forEach((c,i) => {
       const key = `${c}-${u}`;
       const d = diffMap[key] !== undefined ? diffMap[key] : 0.5;
-      const fill = lerpColor(d);
-      const txtCol = d > 0.5 ? '#fff' : '#1e2740';
-      const x=padL+i*cellW, y=padT+j*cellH;
-      svg += `<rect x="${x+2}" y="${y+2}" width="${cellW-4}" height="${cellH-4}" rx="8" fill="${fill}" opacity="0.85" style="cursor:pointer" data-cat="${c}" data-urg="${u}" data-diff="${d}" data-rec="${recs(d)}"
-        onmouseenter="showHeatTip(evt)" onmouseleave="hideHeatTip()"/>`;
-      svg += `<text x="${x+cellW/2}" y="${y+cellH/2+4}" text-anchor="middle" fill="${txtCol}" font-size="13" font-weight="800" font-family="JetBrains Mono" pointer-events="none">${d.toFixed(2)}</text>`;
+      // Low difficulty = subtle surface, High = vivid violet-rose
+      const opacity = 0.12 + d * 0.55;
+      const hue = Math.round(280 - d * 60); // violet(280) → rose-ish(220)
+      const sat = Math.round(40 + d * 40);
+      const fill = `hsla(${hue},${sat}%,60%,${opacity.toFixed(2)})`;
+      const txtCol = d > 0.55 ? 'rgba(241,245,249,.9)' : 'rgba(148,163,184,.8)';
+      const x = padL + i*(cellW+gap), y = padT + j*(cellH+gap);
+      svg += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" rx="6" fill="${fill}" stroke="rgba(139,92,246,.08)" stroke-width="1" style="cursor:pointer;transition:opacity .15s" data-cat="${c}" data-urg="${u}" data-diff="${d.toFixed(2)}" data-rec="${recs(d)}"
+        onmouseenter="showHeatTip(evt)" onmouseleave="hideHeatTip()" onmouseover="this.style.opacity=1;this.style.strokeWidth=1.5;this.style.stroke='rgba(167,139,250,.4)'" onmouseout="this.style.opacity='';this.style.strokeWidth=1;this.style.stroke='rgba(139,92,246,.08)'"/>`;
+      svg += `<text x="${x+cellW/2}" y="${y+cellH/2+3.5}" text-anchor="middle" fill="${txtCol}" font-size="11" font-weight="600" font-family="JetBrains Mono" pointer-events="none">${d.toFixed(2)}</text>`;
     });
   });
   svg += '</svg>';
-  // Legend
-  svg += `<div style="max-width:400px;margin:0 auto"><div class="legend-bar" style="background:linear-gradient(90deg,#3B82F6,#F43F5E)"></div><div class="legend-labels"><span>Easy</span><span>Hard</span></div></div>`;
+  // Compact legend
+  svg += `<div style="max-width:260px;margin:8px 0 0"><div class="legend-bar" style="background:linear-gradient(90deg,hsla(280,40%,60%,.15),hsla(220,80%,60%,.65));height:6px;border-radius:3px"></div><div class="legend-labels" style="font-size:9px;margin-top:2px"><span>Low difficulty</span><span>High difficulty</span></div></div>`;
   $('heatmapContainer').innerHTML = svg;
 }
 
 function showHeatTip(evt) {
   const el = evt.target;
   const tip = $('heatmapTooltip');
-  tip.innerHTML = `<strong>Category:</strong> ${el.dataset.cat} &nbsp;|&nbsp; <strong>Urgency:</strong> ${el.dataset.urg}<br><strong>Difficulty:</strong> ${el.dataset.diff} &nbsp;|&nbsp; <em>${el.dataset.rec}</em>`;
+  tip.innerHTML = `<div style="margin-bottom:4px"><strong>${el.dataset.cat}</strong> · ${el.dataset.urg} urgency</div><div style="color:var(--text2)">Difficulty index: <strong style="color:var(--text)">${el.dataset.diff}</strong></div><div style="color:var(--text3);margin-top:3px;font-style:italic">${el.dataset.rec}</div>`;
   tip.classList.add('visible');
   const rect = el.getBoundingClientRect();
   const container = $('heatmapContainer').getBoundingClientRect();
-  tip.style.left = (rect.left - container.left + rect.width/2 - tip.offsetWidth/2) + 'px';
-  tip.style.top = (rect.top - container.top - tip.offsetHeight - 8) + 'px';
+  tip.style.left = Math.max(0, rect.left - container.left + rect.width/2 - tip.offsetWidth/2) + 'px';
+  tip.style.top = (rect.top - container.top - tip.offsetHeight - 6) + 'px';
 }
 function hideHeatTip() { $('heatmapTooltip').classList.remove('visible'); }
 
