@@ -207,8 +207,17 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .heatmap-tooltip.visible{opacity:1}
 .legend-bar{height:12px;border-radius:6px;margin-top:12px}
 .legend-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px}
+.difficulty-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.difficulty-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.difficulty-panel-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.difficulty-panel-title .material-symbols-outlined{font-size:14px;opacity:.5}
+.hist-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.hist-label{font-size:11px;font-weight:600;width:72px;text-align:right;flex-shrink:0;color:var(--text2)}
+.hist-track{flex:1;height:22px;background:var(--bg);border-radius:6px;overflow:hidden;position:relative}
+.hist-fill{height:100%;border-radius:6px;transition:width .5s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.85);min-width:32px}
+.hist-sub{font-size:9px;color:var(--text3);margin-top:1px;text-align:right;width:72px;flex-shrink:0}
 
-@media(max-width:1024px){.main{grid-template-columns:1fr;height:auto}.sidebar-left,.sidebar-right{border:none;border-bottom:1px solid var(--border)}.header-center{display:none}.runner-grid{grid-template-columns:1fr}}
+@media(max-width:1024px){.main{grid-template-columns:1fr;height:auto}.sidebar-left,.sidebar-right{border:none;border-bottom:1px solid var(--border)}.header-center{display:none}.runner-grid{grid-template-columns:1fr}.difficulty-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -360,12 +369,21 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   </div>
 </div>
 
-<!-- ═══════ TICKET DIFFICULTY HEATMAP ═══════ -->
+<!-- ═══════ DIFFICULTY ANALYSIS ═══════ -->
 <div class="full-section">
-  <div class="full-section-title"><span class="material-symbols-outlined" style="font-size:20px;opacity:.6">grid_view</span> Agent Difficulty Matrix</div>
-  <p style="color:var(--text3);font-size:12px;margin:-8px 0 16px;max-width:600px">Estimated resolution difficulty per category–urgency combination. Hover for routing guidance.</p>
-  <div class="heatmap-container" id="heatmapContainer"></div>
-  <div class="heatmap-tooltip" id="heatmapTooltip"></div>
+  <div class="full-section-title"><span class="material-symbols-outlined" style="font-size:20px;opacity:.6">grid_view</span> Agent Difficulty Analysis</div>
+  <p style="color:var(--text3);font-size:12px;margin:-8px 0 16px;max-width:700px">Resolution difficulty across category–urgency combinations. Hover cells for routing guidance.</p>
+  <div class="difficulty-grid">
+    <div class="difficulty-panel">
+      <div class="difficulty-panel-title"><span class="material-symbols-outlined">apps</span>Difficulty Matrix</div>
+      <div class="heatmap-container" id="heatmapContainer"></div>
+      <div class="heatmap-tooltip" id="heatmapTooltip"></div>
+    </div>
+    <div class="difficulty-panel">
+      <div class="difficulty-panel-title"><span class="material-symbols-outlined">bar_chart</span>Average Difficulty by Category</div>
+      <div id="histogramContainer"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Snackbar -->
@@ -626,6 +644,7 @@ async function init() {
   $('btnPlayAgain').addEventListener('click', () => { if(S.activeTask) resetTask(S.activeTask); });
   setInterval(async () => { await checkHealth(); if (S.activeTask && !S.done) await pollState(); }, 2000);
   renderHeatmap();
+  renderHistogram();
 }
 init();
 
@@ -765,6 +784,63 @@ function showHeatTip(evt) {
   tip.style.top = (rect.top - container.top - tip.offsetHeight - 6) + 'px';
 }
 function hideHeatTip() { $('heatmapTooltip').classList.remove('visible'); }
+
+/* ═══════ DIFFICULTY HISTOGRAM ═══════ */
+function renderHistogram() {
+  const categories = ['Technical','Policy','Billing','Account','Other'];
+  const urgencies = ['Critical','High','Medium','Low'];
+  const diffMap = {
+    'Technical-Critical':0.95,'Policy-High':0.88,'Billing-Critical':0.82,
+    'Technical-High':0.79,'Policy-Critical':0.85,'Policy-Medium':0.71,
+    'Account-Critical':0.72,'Account-High':0.65,'Account-Medium':0.58,
+    'Billing-High':0.68,'Billing-Medium':0.55,'Technical-Medium':0.60,
+    'Technical-Low':0.42,'Billing-Low':0.38,'Account-Low':0.31,
+    'Policy-Low':0.45,'Other-Critical':0.35,'Other-High':0.28,
+    'Other-Medium':0.25,'Other-Low':0.20
+  };
+
+  // Compute average difficulty per category
+  const catData = categories.map(c => {
+    const vals = urgencies.map(u => diffMap[`${c}-${u}`] || 0.5);
+    const avg = vals.reduce((a,b) => a+b, 0) / vals.length;
+    const max = Math.max(...vals);
+    const min = Math.min(...vals);
+    return { name: c, avg, max, min };
+  }).sort((a,b) => b.avg - a.avg);
+
+  const maxAvg = Math.max(...catData.map(d => d.avg));
+
+  let html = '';
+  catData.forEach(d => {
+    const pct = (d.avg / maxAvg) * 100;
+    const hue = Math.round(280 - d.avg * 60);
+    const sat = Math.round(40 + d.avg * 40);
+    const bg = `linear-gradient(90deg, hsla(${hue},${sat}%,55%,.6), hsla(${hue},${sat}%,50%,.35))`;
+    html += `<div class="hist-row">
+      <span class="hist-label">${d.name}</span>
+      <div class="hist-track"><div class="hist-fill" style="width:${pct}%;background:${bg}">${d.avg.toFixed(2)}</div></div>
+    </div>`;
+  });
+
+  // Add urgency-level summary below
+  html += '<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px">';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Average Difficulty by Urgency</div>';
+  urgencies.forEach(u => {
+    const vals = categories.map(c => diffMap[`${c}-${u}`] || 0.5);
+    const avg = vals.reduce((a,b) => a+b, 0) / vals.length;
+    const pct = (avg / 1.0) * 100;
+    const hue = Math.round(280 - avg * 60);
+    const sat = Math.round(40 + avg * 40);
+    const bg = `linear-gradient(90deg, hsla(${hue},${sat}%,55%,.6), hsla(${hue},${sat}%,50%,.35))`;
+    html += `<div class="hist-row">
+      <span class="hist-label">${u}</span>
+      <div class="hist-track"><div class="hist-fill" style="width:${pct}%;background:${bg}">${avg.toFixed(2)}</div></div>
+    </div>`;
+  });
+  html += '</div>';
+
+  $('histogramContainer').innerHTML = html;
+}
 
 </script>
 </body>
