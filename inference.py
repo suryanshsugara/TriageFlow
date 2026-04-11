@@ -225,6 +225,125 @@ def run_task(env: TriageFlowEnv, client: OpenAI, task_name: str, seed: int) -> f
     return final_score
 
 
+# ──────────────────────────── Streaming Task Runner (for SSE) ────────────────────────────
+
+
+def run_task_streaming(
+    api_base_url: str,
+    model_name: str,
+    api_key: str,
+    task_name: str,
+    seed: int = 42,
+):
+    """Generator that yields log lines for a single task run.
+
+    Used by the /run_agent SSE endpoint. Does NOT print to stdout —
+    instead yields each log line as a string so the caller can stream it.
+
+    Args:
+        api_base_url: Base URL for the OpenAI-compatible API.
+        model_name: Model identifier.
+        api_key: API key / token.
+        task_name: One of the three task names.
+        seed: Random seed.
+
+    Yields:
+        Log line strings in [START]/[STEP]/[END] format.
+    """
+    from openai import OpenAI as _OpenAI
+
+    client = _OpenAI(base_url=api_base_url, api_key=api_key)
+    env = TriageFlowEnv()
+
+    start_line = f"[START] task={task_name} env=triageflow model={model_name}"
+    yield start_line
+
+    obs = env.reset(seed=seed, task_name=task_name)
+    done = False
+    step_num = 0
+    rewards_list: list[float] = []
+    info: dict[str, Any] = {}
+    error_msg = None
+
+    while not done:
+        step_num += 1
+        error_msg = None
+
+        try:
+            obs_dict = obs.model_dump()
+            user_prompt = build_user_prompt(obs_dict, task_name)
+
+            # Call the LLM (reuse existing call_llm but with dynamic model)
+            for attempt in range(MAX_RETRIES):
+                try:
+                    response = client.chat.completions.create(
+                        model=model_name,
+                        messages=[
+                            {"role": "system", "content": SYSTEM_PROMPT},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        temperature=0.0,
+                        max_tokens=256,
+                    )
+                    content = response.choices[0].message.content or ""
+                    content = content.strip()
+                    if content.startswith("```"):
+                        lines = content.split("\n")
+                        content = "\n".join(lines[1:-1]) if len(lines) > 2 else content
+                    action_dict = json.loads(content)
+                    break
+                except (json.JSONDecodeError, Exception):
+                    if attempt < MAX_RETRIES - 1:
+                        time.sleep(2 ** attempt)
+                        continue
+                    action_dict = _default_action()
+
+            action = Action(
+                action_type=action_dict.get("action_type", "classify"),
+                urgency=action_dict.get("urgency"),
+                category=action_dict.get("category"),
+                assigned_team=action_dict.get("assigned_team"),
+                missing_fields=action_dict.get("missing_fields"),
+                resolution_note=action_dict.get("resolution_note"),
+                escalation_reason=action_dict.get("escalation_reason"),
+            )
+
+            obs, reward, done, info = env.step(action)
+            rewards_list.append(reward.total)
+
+            done_str = str(done).lower()
+            step_line = (
+                f"[STEP] step={step_num} action={action.action_type} "
+                f"reward={reward.total:.4f} done={done_str} error=null"
+            )
+            yield step_line
+
+        except Exception as e:
+            error_msg = str(e)
+            step_line = (
+                f"[STEP] step={step_num} action=error "
+                f"reward=0.0000 done=true error={error_msg}"
+            )
+            yield step_line
+            done = True
+
+    # Compute final score
+    EPS = 1e-4
+    final_score = info.get("final_score", EPS) if not error_msg else EPS
+    if not rewards_list:
+        final_score = EPS
+    final_score = max(EPS, min(1.0 - EPS, final_score))
+
+    success = final_score >= 0.5
+    success_str = str(success).lower()
+    rewards_str = ",".join(f"{r:.4f}" for r in rewards_list)
+    end_line = (
+        f"[END] success={success_str} steps={step_num} "
+        f"score={final_score:.4f} rewards={rewards_str}"
+    )
+    yield end_line
+
+
 # ──────────────────────────── Main ────────────────────────────
 
 
@@ -252,3 +371,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

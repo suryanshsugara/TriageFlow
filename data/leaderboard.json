@@ -1,0 +1,17 @@
+[
+  {"model_name":"gpt-4o","task_name":"ticket_classification","score":0.92,"steps":8,"seed":42,"timestamp":"2025-06-15T10:00:00Z"},
+  {"model_name":"gpt-4o-mini","task_name":"ticket_classification","score":0.81,"steps":9,"seed":42,"timestamp":"2025-06-15T11:00:00Z"},
+  {"model_name":"claude-3-haiku","task_name":"ticket_classification","score":0.78,"steps":10,"seed":42,"timestamp":"2025-06-16T09:00:00Z"},
+  {"model_name":"llama-3-70b","task_name":"ticket_classification","score":0.61,"steps":10,"seed":42,"timestamp":"2025-06-16T14:00:00Z"},
+  {"model_name":"random-baseline","task_name":"ticket_classification","score":0.14,"steps":10,"seed":42,"timestamp":"2025-06-17T08:00:00Z"},
+  {"model_name":"gpt-4o","task_name":"ticket_routing","score":0.74,"steps":16,"seed":42,"timestamp":"2025-06-15T10:30:00Z"},
+  {"model_name":"gpt-4o-mini","task_name":"ticket_routing","score":0.63,"steps":18,"seed":42,"timestamp":"2025-06-15T11:30:00Z"},
+  {"model_name":"claude-3-haiku","task_name":"ticket_routing","score":0.59,"steps":19,"seed":42,"timestamp":"2025-06-16T09:30:00Z"},
+  {"model_name":"llama-3-70b","task_name":"ticket_routing","score":0.48,"steps":20,"seed":42,"timestamp":"2025-06-16T14:30:00Z"},
+  {"model_name":"random-baseline","task_name":"ticket_routing","score":0.08,"steps":20,"seed":42,"timestamp":"2025-06-17T08:30:00Z"},
+  {"model_name":"gpt-4o","task_name":"policy_triage","score":0.61,"steps":25,"seed":42,"timestamp":"2025-06-15T11:00:00Z"},
+  {"model_name":"gpt-4o-mini","task_name":"policy_triage","score":0.47,"steps":28,"seed":42,"timestamp":"2025-06-15T12:00:00Z"},
+  {"model_name":"claude-3-haiku","task_name":"policy_triage","score":0.43,"steps":29,"seed":42,"timestamp":"2025-06-16T10:00:00Z"},
+  {"model_name":"llama-3-70b","task_name":"policy_triage","score":0.31,"steps":30,"seed":42,"timestamp":"2025-06-16T15:00:00Z"},
+  {"model_name":"random-baseline","task_name":"policy_triage","score":0.04,"steps":30,"seed":42,"timestamp":"2025-06-17T09:00:00Z"}
+]

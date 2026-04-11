@@ -11,6 +11,9 @@ DASHBOARD_HTML = r"""<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <style>
+/* ═══ NAV LINKS ═══ */
+.nav-link{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;color:var(--text2);text-decoration:none;border:1px solid transparent;transition:all .2s}
+.nav-link:hover{color:var(--accent);border-color:var(--border)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#06080f;--bg-subtle:#0a0e1a;--surface:#111827;--surface2:#1e2740;--surface3:#283352;
@@ -183,7 +186,29 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .empty-state p{margin-top:4px;font-size:12px;color:var(--text3);max-width:240px;margin-inline:auto;line-height:1.5}
 
 /* ═══════ RESPONSIVE ═══════ */
-@media(max-width:1024px){.main{grid-template-columns:1fr;height:auto}.sidebar-left,.sidebar-right{border:none;border-bottom:1px solid var(--border)}.header-center{display:none}}
+/* ═══════ FULL-WIDTH SECTIONS ═══════ */
+.full-section{padding:24px 28px;border-top:1px solid var(--border)}
+.full-section-title{font-size:18px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+
+/* Agent Runner */
+.runner-grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
+.runner-config{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.runner-output{background:#030712;border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);min-height:300px;max-height:400px;overflow-y:auto;position:relative;line-height:1.6}
+.runner-output::before{content:'LIVE OUTPUT';position:absolute;top:6px;right:8px;font-size:8px;color:var(--text3);letter-spacing:1px;opacity:.5}
+.runner-score{font-size:48px;font-weight:900;text-align:center;margin-top:12px;letter-spacing:-2px}
+.btn-run{background:linear-gradient(135deg,#3B82F6,#60a5fa);color:#fff;width:100%;margin-top:12px;padding:12px}
+.btn-run:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-stop{background:linear-gradient(135deg,#e11d48,#fb7185);color:#fff;width:100%;margin-top:8px;padding:10px}
+.btn-download{margin-top:8px;width:100%}
+
+/* Heatmap */
+.heatmap-container{position:relative}
+.heatmap-tooltip{position:absolute;background:var(--surface2);border:1px solid var(--border-bright);border-radius:var(--radius-xs);padding:10px 14px;font-size:11px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.heatmap-tooltip.visible{opacity:1}
+.legend-bar{height:12px;border-radius:6px;margin-top:12px}
+.legend-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px}
+
+@media(max-width:1024px){.main{grid-template-columns:1fr;height:auto}.sidebar-left,.sidebar-right{border:none;border-bottom:1px solid var(--border)}.header-center{display:none}.runner-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -204,6 +229,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="chip"><span class="material-symbols-outlined" style="font-size:14px">task</span>Task: <span class="val" id="mcTask">—</span></div>
   </div>
   <div class="header-right">
+    <a href="/replay" class="nav-link">🔁 Replay</a>
+    <a href="/leaderboard" class="nav-link">🏆 Leaderboard</a>
     <div class="status-pill" id="statusPill">
       <span class="status-dot"></span>
       <span id="statusLabel">—</span>
@@ -303,6 +330,41 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="section-title"><span class="material-symbols-outlined">terminal</span>Step Log</div>
     <div class="terminal" id="terminalLog"></div>
   </aside>
+</div>
+
+<!-- ═══════ LIVE AGENT RUNNER ═══════ -->
+<div class="full-section">
+  <div class="full-section-title">🤖 Live Agent Runner</div>
+  <div class="runner-grid">
+    <div class="runner-config">
+      <div class="card-title"><span class="material-symbols-outlined" style="font-size:14px">settings</span>Agent Configuration</div>
+      <div class="form-group"><label class="form-label">API Base URL</label><input class="form-input" id="raUrl" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1"></div>
+      <div class="form-group"><label class="form-label">Model Name</label><input class="form-input" id="raModel" placeholder="gpt-4o-mini" value="gpt-4o-mini"></div>
+      <div class="form-group"><label class="form-label">API Key</label><input class="form-input" id="raKey" type="password" placeholder="sk-..."></div>
+      <div class="form-group"><label class="form-label">Task</label>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer"><input type="radio" name="raTask" value="ticket_classification" checked style="accent-color:var(--accent)"> 🟢 Easy — Classification</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer"><input type="radio" name="raTask" value="ticket_routing" style="accent-color:var(--accent)"> 🟡 Medium — Routing</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer"><input type="radio" name="raTask" value="policy_triage" style="accent-color:var(--accent)"> 🔴 Hard — Policy Triage</label>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Seed</label><input class="form-input" id="raSeed" type="number" value="42"></div>
+      <button class="btn btn-run" id="btnRunAgent" onclick="runAgent()"><span class="material-symbols-outlined" style="font-size:16px">play_arrow</span> Run Agent</button>
+      <button class="btn btn-stop" id="btnStopAgent" onclick="stopAgent()" style="display:none"><span class="material-symbols-outlined" style="font-size:16px">stop</span> Stop</button>
+      <button class="btn btn-ghost btn-download" id="btnDownloadLog" onclick="downloadLog()" style="display:none"><span class="material-symbols-outlined" style="font-size:16px">download</span> Download Log</button>
+    </div>
+    <div>
+      <div class="runner-output" id="runnerOutput"></div>
+      <div class="runner-score" id="runnerScore" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TICKET DIFFICULTY HEATMAP ═══════ -->
+<div class="full-section">
+  <div class="full-section-title">📊 Ticket Difficulty Heatmap</div>
+  <div class="heatmap-container" id="heatmapContainer"></div>
+  <div class="heatmap-tooltip" id="heatmapTooltip"></div>
 </div>
 
 <!-- Snackbar -->
@@ -562,8 +624,148 @@ async function init() {
   $('btnSubmit').addEventListener('click', submitAction);
   $('btnPlayAgain').addEventListener('click', () => { if(S.activeTask) resetTask(S.activeTask); });
   setInterval(async () => { await checkHealth(); if (S.activeTask && !S.done) await pollState(); }, 2000);
+  renderHeatmap();
 }
 init();
+
+/* ═══════ LIVE AGENT RUNNER ═══════ */
+let agentController = null;
+let agentLogLines = [];
+
+async function runAgent() {
+  const url = $('raUrl').value.trim();
+  const model = $('raModel').value.trim();
+  const key = $('raKey').value.trim();
+  const task = document.querySelector('input[name="raTask"]:checked').value;
+  const seed = parseInt($('raSeed').value) || 42;
+  if (!url || !model || !key) { showSnack('Please fill in API URL, model, and key'); return; }
+  $('btnRunAgent').style.display = 'none';
+  $('btnStopAgent').style.display = '';
+  $('btnDownloadLog').style.display = 'none';
+  $('runnerScore').style.display = 'none';
+  $('runnerOutput').textContent = '';
+  agentLogLines = [];
+  agentController = new AbortController();
+  try {
+    const resp = await fetch('/run_agent', {
+      method:'POST', signal:agentController.signal,
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({api_base_url:url,model_name:model,api_key:key,task_name:task,seed})
+    });
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, {stream:true});
+      const parts = buffer.split('\n\n');
+      buffer = parts.pop();
+      for (const part of parts) {
+        if (part.startsWith('data: ')) {
+          const line = part.slice(6);
+          agentLogLines.push(line);
+          $('runnerOutput').textContent += line + '\n';
+          $('runnerOutput').scrollTop = $('runnerOutput').scrollHeight;
+          if (line.startsWith('[END]')) {
+            const scoreM = line.match(/score=([\d.]+)/);
+            if (scoreM) {
+              const sc = parseFloat(scoreM[1]);
+              const col = sc >= 0.5 ? 'var(--accent)' : 'var(--rose)';
+              $('runnerScore').style.display = '';
+              $('runnerScore').style.color = col;
+              $('runnerScore').textContent = sc.toFixed(4);
+            }
+          }
+        }
+      }
+    }
+  } catch(e) { if (e.name !== 'AbortError') showSnack('Agent run error: ' + e.message); }
+  $('btnRunAgent').style.display = '';
+  $('btnStopAgent').style.display = 'none';
+  if (agentLogLines.length) $('btnDownloadLog').style.display = '';
+}
+
+function stopAgent() {
+  if (agentController) agentController.abort();
+  $('btnRunAgent').style.display = '';
+  $('btnStopAgent').style.display = 'none';
+}
+
+function downloadLog() {
+  const task = document.querySelector('input[name="raTask"]:checked').value;
+  const model = $('raModel').value.trim() || 'agent';
+  const ts = new Date().toISOString().replace(/[:.]/g,'-');
+  const blob = new Blob([agentLogLines.join('\n')], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `triageflow_${task}_${model}_${ts}.txt`;
+  a.click();
+}
+
+/* ═══════ TICKET DIFFICULTY HEATMAP ═══════ */
+function renderHeatmap() {
+  const categories = ['billing','technical','account','policy','other'];
+  const urgencies = ['critical','high','medium','low'];
+  const diffMap = {
+    'technical-critical':0.95,'policy-high':0.88,'billing-critical':0.82,
+    'technical-high':0.79,'policy-critical':0.85,'policy-medium':0.71,
+    'account-critical':0.72,'account-high':0.65,'account-medium':0.58,
+    'billing-high':0.68,'billing-medium':0.55,'technical-medium':0.60,
+    'technical-low':0.42,'billing-low':0.38,'account-low':0.31,
+    'policy-low':0.45,'other-critical':0.35,'other-high':0.28,
+    'other-medium':0.25,'other-low':0.20
+  };
+  const recs = d => d>=0.8?'Always escalate to tier2':d>=0.6?'Route carefully, check SLA':d>=0.4?'Standard routing applies':'Tier1 resolution likely sufficient';
+  const cellW=120,cellH=60,padL=90,padT=50,padB=60;
+  const w=padL+categories.length*cellW+20, h=padT+urgencies.length*cellH+padB;
+
+  function lerpColor(t){
+    const r1=59,g1=130,b1=246,r2=244,g2=63,b2=94;
+    const r=Math.round(r1+(r2-r1)*t),g=Math.round(g1+(g2-g1)*t),b=Math.round(b1+(b2-b1)*t);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  let svg = `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="display:block">`;
+  // Column headers
+  categories.forEach((c,i) => {
+    svg += `<text x="${padL+i*cellW+cellW/2}" y="${padT-12}" text-anchor="middle" fill="var(--text2)" font-size="11" font-weight="700" font-family="Inter" text-transform="uppercase">${c}</text>`;
+  });
+  // Row headers
+  urgencies.forEach((u,j) => {
+    svg += `<text x="${padL-12}" y="${padT+j*cellH+cellH/2+4}" text-anchor="end" fill="var(--text2)" font-size="11" font-weight="600" font-family="Inter">${u}</text>`;
+  });
+  // Cells
+  urgencies.forEach((u,j) => {
+    categories.forEach((c,i) => {
+      const key = `${c}-${u}`;
+      const d = diffMap[key] !== undefined ? diffMap[key] : 0.5;
+      const fill = lerpColor(d);
+      const txtCol = d > 0.5 ? '#fff' : '#1e2740';
+      const x=padL+i*cellW, y=padT+j*cellH;
+      svg += `<rect x="${x+2}" y="${y+2}" width="${cellW-4}" height="${cellH-4}" rx="8" fill="${fill}" opacity="0.85" style="cursor:pointer" data-cat="${c}" data-urg="${u}" data-diff="${d}" data-rec="${recs(d)}"
+        onmouseenter="showHeatTip(evt)" onmouseleave="hideHeatTip()"/>`;
+      svg += `<text x="${x+cellW/2}" y="${y+cellH/2+4}" text-anchor="middle" fill="${txtCol}" font-size="13" font-weight="800" font-family="JetBrains Mono" pointer-events="none">${d.toFixed(2)}</text>`;
+    });
+  });
+  svg += '</svg>';
+  // Legend
+  svg += `<div style="max-width:400px;margin:0 auto"><div class="legend-bar" style="background:linear-gradient(90deg,#3B82F6,#F43F5E)"></div><div class="legend-labels"><span>Easy</span><span>Hard</span></div></div>`;
+  $('heatmapContainer').innerHTML = svg;
+}
+
+function showHeatTip(evt) {
+  const el = evt.target;
+  const tip = $('heatmapTooltip');
+  tip.innerHTML = `<strong>Category:</strong> ${el.dataset.cat} &nbsp;|&nbsp; <strong>Urgency:</strong> ${el.dataset.urg}<br><strong>Difficulty:</strong> ${el.dataset.diff} &nbsp;|&nbsp; <em>${el.dataset.rec}</em>`;
+  tip.classList.add('visible');
+  const rect = el.getBoundingClientRect();
+  const container = $('heatmapContainer').getBoundingClientRect();
+  tip.style.left = (rect.left - container.left + rect.width/2 - tip.offsetWidth/2) + 'px';
+  tip.style.top = (rect.top - container.top - tip.offsetHeight - 8) + 'px';
+}
+function hideHeatTip() { $('heatmapTooltip').classList.remove('visible'); }
+
 </script>
 </body>
 </html>"""

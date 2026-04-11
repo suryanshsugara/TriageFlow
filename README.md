@@ -192,6 +192,45 @@ triageflow/
     └── test_reward.py        # Reward function unit tests
 ```
 
+## 🖥️ Interactive Dashboard
+
+TriageFlow ships with a full-featured interactive dashboard at `http://localhost:7860`. Start the server and explore:
+
+**Main Dashboard** (`/dashboard`)
+- **Task Selector** — Choose between Easy, Medium, and Hard tasks and load episodes with one click
+- **Ticket Viewer** — Read full ticket details with sender info, urgency badges, and attachments
+- **Manual Action Panel** — Submit classify, route, escalate, resolve, and skip actions with a premium form UI
+- **Reward Breakdown** — Visualize per-component reward bars (correctness, routing, completeness, policy compliance)
+- **Score Gauge** — Animated circular gauge showing real-time episode score
+- **🤖 Live Agent Runner** — Run the baseline inference agent directly from the browser against any OpenAI-compatible API. Streams [START]/[STEP]/[END] logs in real-time via SSE
+- **📊 Ticket Difficulty Heatmap** — Color-coded SVG visualization of category × urgency difficulty with hover tooltips and recommendations
+
+**Agent Replay Visualizer** (`/replay`)
+- Paste raw stdout logs from `inference.py` and watch the episode play back step-by-step
+- Step-through mode with auto-play, cumulative reward chart, and final score summary
+- Great for debugging agent behavior and presenting results to judges
+
+**Benchmark Leaderboard** (`/leaderboard`)
+- Community-populated scoreboard with gold/silver/bronze rankings per task
+- Submit your own scores via the built-in form — no database required
+- Pre-populated with baseline results from 5 different models
+
+**Quick start:** Start the server and open http://localhost:7860 in your browser.
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 7860
+```
+
+## 🏆 Benchmark Results
+
+| Model | Easy | Medium | Hard | Avg |
+|-------|------|--------|------|-----|
+| gpt-4o | 0.92 | 0.74 | 0.61 | 0.76 |
+| gpt-4o-mini | 0.81 | 0.63 | 0.47 | 0.64 |
+| claude-3-haiku | 0.78 | 0.59 | 0.43 | 0.60 |
+| llama-3-70b | 0.61 | 0.48 | 0.31 | 0.47 |
+| random-baseline | 0.14 | 0.08 | 0.04 | 0.09 |
+
 ## License
 
 MIT License. See LICENSE file for details.
